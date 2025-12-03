@@ -13,16 +13,21 @@
     --color-primary: #000000;
     --color-secondary: #FFFFFF;
     --color-accent: #0066FF;
-    --color-dark-bg: #0A0A0A;
-    --color-gray-dark: #1A1A1A;
-    --color-gray-medium: #2A2A2A;
-    --color-gray-light: #999999;
-    --color-success: #10B981;
-    --color-error: #EF4444;
+    --color-accent-light: #3D8BFF;
+    --color-accent-dark: #0052CC;
+    --color-dark-bg: #000000;
+    --color-gray-dark: #0D0D0D;
+    --color-gray-medium: #1A1A1A;
+    --color-gray-light: #8B8B8B;
+    --color-success: #00FF88;
+    --color-error: #FF3366;
+    --color-cyan: #00F0FF;
+    --color-purple: #8B5CF6;
     
     --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     
-    --transition: all 0.3s ease;
+    --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 html {
@@ -32,15 +37,40 @@ html {
 body {
     font-family: var(--font-family);
     background-color: var(--color-dark-bg);
+    background-image: 
+        linear-gradient(rgba(0, 102, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 102, 255, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+    background-position: -1px -1px;
     color: var(--color-secondary);
     line-height: 1.6;
     overflow-x: hidden;
-    padding-top: 80px; /* Space for fixed header */
+    padding-top: 80px;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 20% 50%, rgba(0, 102, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.08) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+body > * {
+    position: relative;
+    z-index: 1;
 }
 
 @media (max-width: 768px) {
     body {
         padding-top: 70px;
+        background-size: 30px 30px;
     }
 }
 
@@ -54,10 +84,12 @@ body {
     left: 0;
     right: 0;
     z-index: 1000;
-    background: linear-gradient(135deg, rgba(0, 0, 0, 0.95), rgba(26, 26, 26, 0.95));
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(0, 102, 255, 0.2);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid rgba(0, 102, 255, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .header-content {
@@ -232,23 +264,45 @@ body {
     font-size: 1rem;
     font-weight: 600;
     text-decoration: none;
-    border-radius: 0.5rem;
+    border-radius: 0.75rem;
     transition: var(--transition);
     cursor: pointer;
     border: none;
     text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn:hover::before {
+    width: 300px;
+    height: 300px;
 }
 
 .btn-primary {
-    background-color: var(--color-accent);
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
     color: var(--color-secondary);
-    box-shadow: 0 10px 30px rgba(0, 102, 255, 0.3);
+    box-shadow: 0 10px 40px rgba(0, 102, 255, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .btn-primary:hover {
-    background-color: #0052CC;
-    transform: translateY(-2px);
-    box-shadow: 0 15px 40px rgba(0, 102, 255, 0.4);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 20px 60px rgba(0, 102, 255, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .btn-secondary {
@@ -740,16 +794,37 @@ body {
 }
 
 .problem-card {
-    background: linear-gradient(135deg, var(--color-gray-dark), var(--color-gray-medium));
-    border: 1px solid rgba(239, 68, 68, 0.2);
-    border-radius: 1rem;
+    background: rgba(13, 13, 13, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 51, 102, 0.2);
+    border-radius: 1.25rem;
     padding: 2rem;
     transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.problem-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(255, 51, 102, 0.5), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.problem-card:hover::before {
+    opacity: 1;
 }
 
 .problem-card:hover {
-    border-color: rgba(239, 68, 68, 0.4);
-    transform: translateY(-4px);
+    border-color: rgba(255, 51, 102, 0.5);
+    transform: translateY(-8px);
+    box-shadow: 0 20px 60px rgba(255, 51, 102, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .problem-icon {
@@ -983,33 +1058,58 @@ body {
 }
 
 .benefit-card {
-    background: linear-gradient(135deg, var(--color-gray-dark), var(--color-gray-medium));
+    background: rgba(13, 13, 13, 0.6);
+    backdrop-filter: blur(10px);
     border: 1px solid rgba(0, 102, 255, 0.2);
-    border-radius: 1rem;
+    border-radius: 1.25rem;
     padding: 2rem;
     transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.benefit-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(0, 102, 255, 0.6), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.benefit-card:hover::before {
+    opacity: 1;
 }
 
 .benefit-card:hover {
-    border-color: rgba(0, 102, 255, 0.4);
-    box-shadow: 0 15px 40px rgba(0, 102, 255, 0.1);
-    transform: translateY(-4px);
+    border-color: rgba(0, 102, 255, 0.5);
+    box-shadow: 0 20px 60px rgba(0, 102, 255, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    transform: translateY(-8px);
 }
 
 .benefit-icon {
     width: 3.5rem;
     height: 3.5rem;
-    background: rgba(0, 102, 255, 0.2);
-    border-radius: 0.5rem;
+    background: linear-gradient(135deg, rgba(0, 102, 255, 0.15), rgba(61, 139, 255, 0.1));
+    border: 1px solid rgba(0, 102, 255, 0.3);
+    border-radius: 0.75rem;
     display: flex;
     align-items: center;
     justify-content: center;
     margin-bottom: 1.5rem;
+    color: var(--color-accent);
     transition: var(--transition);
+    box-shadow: 0 8px 16px rgba(0, 102, 255, 0.1);
 }
 
 .benefit-card:hover .benefit-icon {
-    background: rgba(0, 102, 255, 0.3);
+    background: linear-gradient(135deg, rgba(0, 102, 255, 0.25), rgba(61, 139, 255, 0.15));
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 12px 24px rgba(0, 102, 255, 0.2);
 }
 
 .benefit-icon svg {
